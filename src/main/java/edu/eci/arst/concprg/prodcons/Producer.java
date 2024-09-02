@@ -27,21 +27,33 @@ public class Producer extends Thread {
         rand = new Random(System.currentTimeMillis());
         this.stockLimit=stockLimit;
     }
-
     @Override
     public void run() {
         while (true) {
-
-            dataSeed = dataSeed + rand.nextInt(100);
-            System.out.println("Producer added " + dataSeed);
-            queue.add(dataSeed);
-            
             try {
-                Thread.sleep(1000);
+                Thread.sleep(1000); 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Producer.class.getName()).log(Level.SEVERE, null, ex);
+                Thread.currentThread().interrupt();
+                break;
             }
-
+    
+            synchronized (queue) {
+                while (stockLimit == queue.size()) {
+                    try {
+                        queue.wait();
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
+                }
+                
+                dataSeed = dataSeed + rand.nextInt(100);
+                System.out.println("Producer added " + dataSeed);
+                queue.offer(dataSeed);
+                queue.notifyAll();
+            }
         }
     }
+    
 }
