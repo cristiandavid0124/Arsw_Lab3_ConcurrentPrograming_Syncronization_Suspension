@@ -21,10 +21,9 @@ public class StartProduction {
     public static void main(String[] args) {
         
         Queue<Integer> queue=new LinkedBlockingQueue<>();
-         long stockLimit = 5L;
-        
-        new Producer(queue,stockLimit).start();
-        
+        long stockLimit = 5L;
+
+       new Producer(queue,stockLimit).start();
        
         try {
             Thread.sleep(5000);

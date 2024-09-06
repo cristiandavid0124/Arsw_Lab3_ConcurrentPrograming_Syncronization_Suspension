@@ -23,26 +23,27 @@ public class Consumer extends Thread{
     @Override
     public void run() {
         while (true) {
-            try {
-                Thread.sleep(2000); 
-                synchronized(queue){
-                    while(queue.isEmpty()) {
-
-                        try {
-                            queue.wait();
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            break;
-                        }                             
+            synchronized(queue) {
+                while(queue.isEmpty()) {
+                    try {
+                        queue.wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        break;
                     }
-                    int elem=queue.poll();
-                    System.out.println("Consumer consumes "+elem);   
-                    queue.notifyAll();   
                 }
-            } catch (InterruptedException e){
-                Thread.currentThread().interrupt();
-                            break;
-            }   
+    
+                int elem = queue.poll();
+                System.out.println("Consumer consumes " + elem);   
+                queue.notifyAll();   
+    
+                try {
+                    Thread.sleep(2000); // Aumentamos el tiempo para consumir más lentamente
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
         }
     }
 }

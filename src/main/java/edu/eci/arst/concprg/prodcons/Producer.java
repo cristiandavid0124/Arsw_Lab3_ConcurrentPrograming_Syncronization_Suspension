@@ -37,7 +37,7 @@ public class Producer extends Thread {
                 Thread.currentThread().interrupt();
                 break;
             }
-    
+
             synchronized (queue) {
                 while (stockLimit == queue.size()) {
                     try {
@@ -47,7 +47,7 @@ public class Producer extends Thread {
                         break;
                     }
                 }
-                
+
                 dataSeed = dataSeed + rand.nextInt(100);
                 System.out.println("Producer added " + dataSeed);
                 queue.offer(dataSeed);
@@ -55,5 +55,7 @@ public class Producer extends Thread {
             }
         }
     }
-    
+
 }
+    
+
